@@ -15,8 +15,8 @@ class HRMAutomation:
         self.clock_xpath = "/html/body/div[2]/section/div[1]/div/div[2]/form/button"
 
     async def run_async(self):
-        screenshots_dir = "tmp/screenshots"
-        os.makedirs(screenshots_dir, exist_ok=True)
+        # screenshots_dir = "tmp/screenshots"
+        # os.makedirs(screenshots_dir, exist_ok=True)
 
         try:
             async with async_playwright() as p:
@@ -33,7 +33,7 @@ class HRMAutomation:
                 await page.goto("http://hrm.codebraininfotech.com/login")
 
                 # Screenshot before login
-                await page.screenshot(path=f"{screenshots_dir}/login_page.png")
+                # await page.screenshot(path=f"{screenshots_dir}/login_page.png")
 
                 await page.fill(f'xpath={self.username_xpath}', self.username)
                 await page.fill(f'xpath={self.password_xpath}', self.password)
@@ -44,7 +44,7 @@ class HRMAutomation:
                 )
 
                 # Screenshot after login
-                await page.screenshot(path=f"{screenshots_dir}/after_login.png")
+                # await page.screenshot(path=f"{screenshots_dir}/after_login.png")
 
                 await browser.close()
                 return {
@@ -54,8 +54,8 @@ class HRMAutomation:
 
         except Exception as e:
             try:
-                await page.screenshot(path=f"{screenshots_dir}/error.png")
-
+                # await page.screenshot(path=f"{screenshots_dir}/error.png")
+                pass
             except:
                 pass
 

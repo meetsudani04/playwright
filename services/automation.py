@@ -1,40 +1,6 @@
 import os
 from playwright.async_api import async_playwright
 
-<<<<<<< HEAD
-=======
-import base64
-import requests
-import uuid
-
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_REPO = os.getenv("GITHUB_REPO")
-GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
-
-def upload_to_github(local_path: str) -> str:
-    filename = f"{uuid.uuid4()}.png"
-    api_url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/screenshots/{filename}"
-
-    with open(local_path, "rb") as f:
-        content = base64.b64encode(f.read()).decode()
-
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github+json",
-    }
-
-    data = {
-        "message": f"Add screenshot {filename}",
-        "content": content,
-        "branch": GITHUB_BRANCH,
-    }
-
-    response = requests.put(api_url, headers=headers, json=data)
-    response.raise_for_status()
-
-    # Raw public URL
-    return f"https://raw.githubusercontent.com/{GITHUB_REPO}/{GITHUB_BRANCH}/screenshots/{filename}"
->>>>>>> a01e820 (change)
 
 class HRMAutomation:
     def __init__(self, username, password, headless=True):
@@ -49,7 +15,7 @@ class HRMAutomation:
         self.clock_xpath = "/html/body/div[2]/section/div[1]/div/div[2]/form/button"
 
     async def run_async(self):
-        screenshots_dir = "/tmp/screenshots"
+        screenshots_dir = "screenshots"
         os.makedirs(screenshots_dir, exist_ok=True)
 
         try:

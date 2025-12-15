@@ -1,5 +1,7 @@
 import os
 from playwright.async_api import async_playwright
+
+
 class HRMAutomation:
     def __init__(self, username, password, headless=True):
         self.username = username
@@ -13,7 +15,7 @@ class HRMAutomation:
         self.clock_xpath = "/html/body/div[2]/section/div[1]/div/div[2]/form/button"
 
     async def run_async(self):
-        screenshots_dir = "/screenshots"
+        screenshots_dir = "screenshots"
         os.makedirs(screenshots_dir, exist_ok=True)
 
         try:
@@ -31,8 +33,7 @@ class HRMAutomation:
                 await page.goto("http://hrm.codebraininfotech.com/login")
 
                 # Screenshot before login
-                login_path = f"{screenshots_dir}/login_page.png"
-                await page.screenshot(path=login_path)
+                await page.screenshot(path=f"{screenshots_dir}/login_page.png")
 
                 await page.fill(f'xpath={self.username_xpath}', self.username)
                 await page.fill(f'xpath={self.password_xpath}', self.password)
@@ -43,15 +44,12 @@ class HRMAutomation:
                 )
 
                 # Screenshot after login
-                after_login_path = f"{screenshots_dir}/after_login.png"
-                await page.screenshot(path=after_login_path)
+                await page.screenshot(path=f"{screenshots_dir}/after_login.png")
 
                 await browser.close()
-
-
                 return {
                     "status": "success",
-                    "message": "Automation completed successfully. Screenshots saved.",
+                    "message": "Automation completed successfully. Screenshots saved."
                 }
 
         except Exception as e:

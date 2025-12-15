@@ -15,7 +15,7 @@ class HRMAutomation:
         self.clock_xpath = "/html/body/div[2]/section/div[1]/div/div[2]/form/button"
 
     async def run_async(self):
-        screenshots_dir = "screenshots"
+        screenshots_dir = "temp/screenshots"
         os.makedirs(screenshots_dir, exist_ok=True)
 
         try:

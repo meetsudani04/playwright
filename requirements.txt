@@ -3,4 +3,8 @@ uvicorn[standard]
 playwright
 jinja2
 python-multipart
-boto3
+sqlalchemy
+psycopg2-binary
+alembic
+python-dotenv
+

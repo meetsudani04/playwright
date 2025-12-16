@@ -1,0 +1,4 @@
+<button class="btn btn-success btn-sm" type="submit" id="clock_btn"><i class="dripicons-exit" style="float:left;margin-right:5px;"></i> <div id="btn_text" style="float:right;" "="">Clock IN</div></button>
+
+
+<button class="btn btn-sm btn-danger" type="submit" id="clock_btn"><i class="dripicons-exit" style="float:left;margin-right:5px;"></i> <div id="btn_text" style="float:right;" "="">Clocked Out</div></button>

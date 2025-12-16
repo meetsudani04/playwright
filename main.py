@@ -1,79 +1,27 @@
-import asyncio
-from fastapi import FastAPI, Form, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel
-from playwright.async_api import async_playwright
-import base64
-from jinja2 import Environment, BaseLoader
-
-from services.automation import HRMAutomation
-
-app = FastAPI()
-env = Environment(loader=BaseLoader())
-
-class CrawlRequest(BaseModel):
-    url: str
-
-class LoginData(BaseModel):
-    username: str
-    password: str
-
-@app.post("/api/crawl")
-async def api_crawl(req: CrawlRequest):
-    try:
-        result = await crawl_url(req.url)
-        return JSONResponse(result)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import os
+import uvicorn
+from api.router import router
 
 
-async def crawl_url(url: str) -> dict:
-    """Crawl the given URL with Playwright and return a JSON-serializable dict.
+app = FastAPI(title="HRMS", version="1.0.0")
 
-    Returned dict: { url, page_title, screenshot_base64, links }
-    """
-    if not url.startswith("http"):
-        url = "https://" + url
+origins = [
+    "http://127.0.0.1:8080",
+    "*"
+]
 
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(
-            headless=True,
-            args=[
-                '--single-process',
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-            ],
-        )
-        page = await browser.new_page()
-        try:
-            await page.goto(url)
-            screenshot = await page.screenshot()
-            page_title = await page.title()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-            links_and_texts = await page.evaluate(
-                """() => {
-                const anchors = document.querySelectorAll('a');
-                return Array.from(anchors).map(anchor => ({ href: anchor.href, text: (anchor.textContent||'').trim() }));
-            }"""
-            )
-            links = [ {"href": l.get('href'), "text": l.get('text')} for l in links_and_texts ]
-        finally:
-            await browser.close()
+app.include_router(router, prefix="/api")
 
-    screenshot_base64 = base64.b64encode(screenshot).decode('utf-8')
-
-    return {
-        "url": url,
-        "page_title": page_title,
-        "screenshot_base64": screenshot_base64,
-        "links": links,
-    }
-
-
-@app.post("/run-selenium")
-async def run_selenium_endpoint(data: LoginData):
-    automation = HRMAutomation(
-        username=data.username,
-        password=data.password,
-    )
-    return await automation.run_async()
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

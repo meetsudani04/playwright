@@ -47,6 +47,8 @@ class HRMAutomation:
 
                 # Screenshot after login
                 # await page.screenshot(path=f"{screenshots_dir}/after_login.png")
+                
+                await page.click(f'xpath={self.clock_xpath}')
 
                 await browser.close()
                 return {
